@@ -1,0 +1,50 @@
+@echo off
+REM Quick Start - Backend and Frontend
+REM This script can be used to demonstrate easy startup
+
+echo.
+echo 🍦 IceCream Calorie Tracker - Startup Guide
+echo ================================================
+echo.
+echo This application requires TWO terminal windows:
+echo.
+echo 📌 STEP 1: Start Backend
+echo    Terminal 1:
+echo    cd backend
+echo    npm install (if not done yet)
+echo    npm start
+echo.
+echo    You should see:
+echo    ✅ 🍦 IceCream Tracker Backend running on http://localhost:5000
+echo.
+echo 📌 STEP 2: Start Frontend (NEW TERMINAL)
+echo    Terminal 2:
+echo    cd frontend
+echo    npm install (if not done yet)
+echo    npm run dev
+echo.
+echo    You should see:
+echo    ✅ ➜  Local:   http://localhost:3000/
+echo.
+echo 📌 STEP 3: Open Browser
+echo    Go to: http://localhost:3000
+echo.
+echo ================================================
+echo.
+echo 🚀 QUICK COMMANDS:
+echo.
+echo Backend:
+echo   cd backend && npm start
+echo.
+echo Frontend (NEW TERMINAL):
+echo   cd frontend && npm run dev
+echo.
+echo Health Check:
+echo   curl http://localhost:5000/health
+echo.
+echo API Test (Add Entry):
+echo   curl -X POST http://localhost:5000/api/icecream -H "Content-Type: application/json" -d "{\"name\":\"Test\",\"type\":\"cone\",\"scoops\":2}"
+echo.
+echo ================================================
+echo Press any key to close this window...
+pause
