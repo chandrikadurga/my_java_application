@@ -34,7 +34,8 @@ function App() {
     try {
       console.log('[ASYNC] Fetching all ice creams...')
       const response = await axios.get(`${API_URL}/icecream`)
-      setIcecreams(response.data.data || [])
+      const list = response?.data?.data
+      setIcecreams(Array.isArray(list) ? list : [])
       fetchTotalCalories()
       fetchStats()
     } catch (error) {
@@ -68,9 +69,16 @@ function App() {
     try {
       setLoading(true)
       const response = await axios.post(`${API_URL}/icecream`, data)
-      setIcecreams([...icecreams, response.data.data])
-      setTotalCalories(totalCalories + response.data.data.calories)
-      showNotification(`🍦 Added ${data.name} - ${response.data.data.calories} kcal`, 'success')
+
+      // Guard against malformed responses so UI state is never corrupted.
+      const createdItem = response?.data?.data
+      if (!createdItem || typeof createdItem.calories !== 'number') {
+        throw new Error('Invalid API response while adding ice cream')
+      }
+
+      setIcecreams(prev => [...prev, createdItem])
+      setTotalCalories(prev => prev + createdItem.calories)
+      showNotification(`🍦 Added ${data.name} - ${createdItem.calories} kcal`, 'success')
       fetchStats()
     } catch (error) {
       showNotification(error.response?.data?.error || 'Failed to add ice cream', 'error')
@@ -84,6 +92,10 @@ function App() {
   const handleDeleteIceCream = async (id) => {
     try {
       const icecream = icecreams.find(ic => ic.id === id)
+      if (!icecream) {
+        showNotification('Ice cream entry not found', 'error')
+        return
+      }
       await axios.delete(`${API_URL}/icecream/${id}`)
       setIcecreams(icecreams.filter(ic => ic.id !== id))
       setTotalCalories(totalCalories - icecream.calories)
@@ -102,7 +114,9 @@ function App() {
   }, [])
 
   // Sort ice creams by calories (highest first)
-  const sortedIcecreams = [...icecreams].sort((a, b) => b.calories - a.calories)
+  const sortedIcecreams = icecreams
+    .filter(item => item && typeof item.calories === 'number')
+    .sort((a, b) => b.calories - a.calories)
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
