@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import IceCreamForm from './components/IceCreamForm'
 import IceCreamList from './components/IceCreamList'
 import Summary from './components/Summary'
+import API from './api/client'
 
 // Global notification system
 let notificationCallback = null
@@ -21,9 +21,6 @@ function App() {
   const [stats, setStats] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
 
-  const rawApiBase = import.meta.env.VITE_API_URL || '/api'
-  const API_URL = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`
-
   // Notification system
   notificationCallback = (notif) => {
     setNotification(notif)
@@ -34,7 +31,7 @@ function App() {
   const fetchIceCreams = async () => {
     try {
       console.log('[ASYNC] Fetching all ice creams...')
-      const response = await axios.get(`${API_URL}/icecream`)
+      const response = await API.get('/api/icecream')
       const list = response?.data?.data
       setIcecreams(Array.isArray(list) ? list : [])
       fetchTotalCalories()
@@ -48,7 +45,7 @@ function App() {
   // Fetch total calories
   const fetchTotalCalories = async () => {
     try {
-      const response = await axios.get(`${API_URL}/icecream-total`)
+      const response = await API.get('/api/icecream-total')
       const total = response?.data?.totalCalories
       setTotalCalories(Number.isFinite(total) ? total : 0)
     } catch (error) {
@@ -60,7 +57,7 @@ function App() {
   // Fetch stats
   const fetchStats = async () => {
     try {
-      const response = await axios.get(`${API_URL}/stats`)
+      const response = await API.get('/api/stats')
       const incomingStats = response?.data?.stats
       setStats(incomingStats && typeof incomingStats === 'object' ? incomingStats : null)
     } catch (error) {
@@ -73,7 +70,7 @@ function App() {
   const handleAddIceCream = async (data) => {
     try {
       setLoading(true)
-      const response = await axios.post(`${API_URL}/icecream`, data)
+      const response = await API.post('/api/icecream', data)
 
       // Guard against malformed responses so UI state is never corrupted.
       const createdItem = response?.data?.data
@@ -101,7 +98,7 @@ function App() {
         showNotification('Ice cream entry not found', 'error')
         return
       }
-      await axios.delete(`${API_URL}/icecream/${id}`)
+      await API.delete(`/api/icecream/${id}`)
       setIcecreams(icecreams.filter(ic => ic.id !== id))
       setTotalCalories(totalCalories - icecream.calories)
       showNotification(`${icecream.name} removed`, 'success')

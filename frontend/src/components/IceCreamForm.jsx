@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { showNotification } from '../App'
+import API from '../api/client'
 
 function IceCreamForm({ onAddIceCream, loading, darkMode }) {
   const [formData, setFormData] = useState({
@@ -11,9 +11,6 @@ function IceCreamForm({ onAddIceCream, loading, darkMode }) {
   const [previewCalories, setPreviewCalories] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const rawApiBase = import.meta.env.VITE_API_URL || '/api'
-  const API_URL = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`
-
   // Calculate preview calories
   useEffect(() => {
     calculatePreview()
@@ -21,7 +18,7 @@ function IceCreamForm({ onAddIceCream, loading, darkMode }) {
 
   const calculatePreview = async () => {
     try {
-      const response = await axios.post(`${API_URL}/calculate-calories`, {
+      const response = await API.post('/api/calculate-calories', {
         type: formData.type,
         scoops: parseInt(formData.scoops) || 1
       })

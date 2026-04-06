@@ -349,7 +349,7 @@ Steps:
 
 Steps:
 1. Import the repository in Vercel.
-2. Add environment variable `VITE_API_URL` and set it to your backend API URL (example: `https://<your-render-backend>.onrender.com/api`).
+2. Add environment variable `VITE_API_URL` and set it to your backend API URL (example: `https://my-java-application.onrender.com`).
 3. Deploy.
 
 ### Environment Variable
@@ -361,7 +361,7 @@ VITE_API_URL
 ```
 
 - Local development default is `/api` (via Vite proxy).
-- Production should point to your hosted backend `/api` endpoint.
+- Production should point to your hosted backend base URL; the app appends `/api` automatically.
 
 ## 🐛 Troubleshooting
 
