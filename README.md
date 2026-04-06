@@ -317,19 +317,51 @@ Update UI
 Show Toast Notification
 ```
 
-## 🚀 Deployment (Optional)
+## 🚀 Deployment
 
-### Frontend Deployment (Vercel)
+This repo is configured for:
+- Render: full-stack deployment (backend + frontend static site)
+- Vercel: frontend deployment
+
+### 1. Production Build
+
 ```bash
+cd frontend
+npm install
 npm run build
-# Deploy the dist/ folder to Vercel
 ```
 
-### Backend Deployment (Render)
+### 2. Deploy on Render (Full Stack)
+
+`render.yaml` is included at the repo root with both services:
+- `icecream-tracker-backend` (Node web service from `backend/`)
+- `icecream-tracker-frontend` (static site from `frontend/dist`)
+
+Steps:
+1. Push this repo to GitHub.
+2. In Render, create a new Blueprint and select this repo.
+3. Render will create both services from `render.yaml`.
+4. Update `VITE_API_URL` in the frontend service if your backend URL differs from the default value in `render.yaml`.
+
+### 3. Deploy on Vercel (Frontend)
+
+`vercel.json` is included at the repo root and builds from `frontend/`.
+
+Steps:
+1. Import the repository in Vercel.
+2. Add environment variable `VITE_API_URL` and set it to your backend API URL (example: `https://<your-render-backend>.onrender.com/api`).
+3. Deploy.
+
+### Environment Variable
+
+Frontend uses:
+
 ```bash
-# Push to GitHub repository
-# Connect to Render and deploy from repository
+VITE_API_URL
 ```
+
+- Local development default is `/api` (via Vite proxy).
+- Production should point to your hosted backend `/api` endpoint.
 
 ## 🐛 Troubleshooting
 
