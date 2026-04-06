@@ -23,7 +23,11 @@ function App() {
 
   // Notification system
   notificationCallback = (notif) => {
-    setNotification(notif)
+    let msg = notif.message;
+    if (typeof msg !== 'string') {
+      msg = msg?.message || JSON.stringify(msg) || 'Unknown error occurred';
+    }
+    setNotification({ ...notif, message: msg })
     setTimeout(() => setNotification(null), 3000)
   }
 
