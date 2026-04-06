@@ -48,9 +48,11 @@ function App() {
   const fetchTotalCalories = async () => {
     try {
       const response = await axios.get(`${API_URL}/icecream-total`)
-      setTotalCalories(response.data.totalCalories)
+      const total = response?.data?.totalCalories
+      setTotalCalories(Number.isFinite(total) ? total : 0)
     } catch (error) {
       console.error('Error fetching total calories:', error)
+      setTotalCalories(0)
     }
   }
 
@@ -58,9 +60,11 @@ function App() {
   const fetchStats = async () => {
     try {
       const response = await axios.get(`${API_URL}/stats`)
-      setStats(response.data.stats)
+      const incomingStats = response?.data?.stats
+      setStats(incomingStats && typeof incomingStats === 'object' ? incomingStats : null)
     } catch (error) {
       console.error('Error fetching stats:', error)
+      setStats(null)
     }
   }
 

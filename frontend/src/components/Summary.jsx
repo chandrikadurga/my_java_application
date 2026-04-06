@@ -1,19 +1,21 @@
 import React from 'react'
 
 function Summary({ totalCalories, count, stats, darkMode }) {
+  const safeTotalCalories = Number.isFinite(totalCalories) ? totalCalories : 0
+  const safeCount = Number.isFinite(count) ? count : 0
   const dailyCalorieLimit = 2000
-  const caloriePercentage = Math.min((totalCalories / dailyCalorieLimit) * 100, 100)
+  const caloriePercentage = Math.min((safeTotalCalories / dailyCalorieLimit) * 100, 100)
   
   const getHealthStatus = () => {
-    if (totalCalories === 0) return { status: 'No entries yet', color: 'text-gray-500', bg: 'from-gray-400 to-gray-500' }
-    if (totalCalories < 500) return { status: 'Light 💪', color: 'text-green-500', bg: 'from-green-500 to-lime-500' }
-    if (totalCalories < 1000) return { status: 'Moderate ⚡', color: 'text-blue-500', bg: 'from-blue-500 to-cyan-500' }
-    if (totalCalories < 1500) return { status: 'Heavy ⚠️', color: 'text-yellow-500', bg: 'from-yellow-500 to-orange-500' }
+    if (safeTotalCalories === 0) return { status: 'No entries yet', color: 'text-gray-500', bg: 'from-gray-400 to-gray-500' }
+    if (safeTotalCalories < 500) return { status: 'Light 💪', color: 'text-green-500', bg: 'from-green-500 to-lime-500' }
+    if (safeTotalCalories < 1000) return { status: 'Moderate ⚡', color: 'text-blue-500', bg: 'from-blue-500 to-cyan-500' }
+    if (safeTotalCalories < 1500) return { status: 'Heavy ⚠️', color: 'text-yellow-500', bg: 'from-yellow-500 to-orange-500' }
     return { status: 'Very Heavy 🔥', color: 'text-red-500', bg: 'from-red-500 to-pink-500' }
   }
 
   const health = getHealthStatus()
-  const avgCalories = count > 0 ? Math.round(totalCalories / count) : 0
+  const avgCalories = safeCount > 0 ? Math.round(safeTotalCalories / safeCount) : 0
 
   return (
     <div className="space-y-4">
@@ -32,7 +34,7 @@ function Summary({ totalCalories, count, stats, darkMode }) {
               TOTAL CALORIES
             </p>
             <p className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 mb-2">
-              {totalCalories.toLocaleString()}
+              {safeTotalCalories.toLocaleString()}
             </p>
             <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               kcal
@@ -47,7 +49,7 @@ function Summary({ totalCalories, count, stats, darkMode }) {
               TOTAL ENTRIES
             </p>
             <p className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500 mb-2">
-              {count}
+              {safeCount}
             </p>
             <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               ice creams
@@ -84,7 +86,7 @@ function Summary({ totalCalories, count, stats, darkMode }) {
                 Daily Limit Progress
               </p>
               <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {totalCalories} / {dailyCalorieLimit} kcal
+                {safeTotalCalories} / {dailyCalorieLimit} kcal
               </p>
             </div>
             <span className={`text-lg font-bold ${health.color}`}>
@@ -98,9 +100,9 @@ function Summary({ totalCalories, count, stats, darkMode }) {
             />
           </div>
           <p className="text-xs mt-2 font-semibold text-center">
-            {totalCalories > dailyCalorieLimit 
-              ? `⚠️ Over limit by ${totalCalories - dailyCalorieLimit} kcal`
-              : `✅ ${dailyCalorieLimit - totalCalories} kcal remaining`
+            {safeTotalCalories > dailyCalorieLimit 
+              ? `⚠️ Over limit by ${safeTotalCalories - dailyCalorieLimit} kcal`
+              : `✅ ${dailyCalorieLimit - safeTotalCalories} kcal remaining`
             }
           </p>
         </div>
