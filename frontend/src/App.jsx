@@ -21,7 +21,8 @@ function App() {
   const [stats, setStats] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
 
-  const API_URL = import.meta.env.VITE_API_URL || '/api'
+  const rawApiBase = import.meta.env.VITE_API_URL || '/api'
+  const API_URL = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`
 
   // Notification system
   notificationCallback = (notif) => {

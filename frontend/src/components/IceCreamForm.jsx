@@ -11,7 +11,8 @@ function IceCreamForm({ onAddIceCream, loading, darkMode }) {
   const [previewCalories, setPreviewCalories] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const API_URL = import.meta.env.VITE_API_URL || '/api'
+  const rawApiBase = import.meta.env.VITE_API_URL || '/api'
+  const API_URL = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`
 
   // Calculate preview calories
   useEffect(() => {
